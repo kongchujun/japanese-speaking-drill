@@ -5,6 +5,7 @@ Vue 3 + FastAPI + PostgreSQL full-stack app for Japanese speaking practice, test
 联系邮箱 / Contact / 連絡先: `natureofwind@gmail.com`
 
 Language / 语言 / 言語: [中文](#中文说明) | [English](#english) | [日本語](#日本語)
+> Note: GitHub README language links jump to sections (anchor navigation).
 
 ---
 
@@ -66,6 +67,21 @@ npm run dev
 - 若用 DB 客户端查看，请确认连接到 `speaking_drill.public`。
 - 后端启动时会执行 `create_all`，缺表会自动补建。
 
+### 本地 TTS 服务/模型切换
+
+- 当前本地 TTS 默认是 `melotts` 容器（`timhagel/melotts-api-server`）。
+- 你可以在 `docker-compose.yml` 里切换：
+  - `DEFAULT_LANGUAGE`（例如 `EN` / `JP`）
+  - `DEFAULT_SPEAKER_ID`（对应语言的说话人）
+  - `DEFAULT_SPEED`
+- 启动命令：
+
+```bash
+docker compose up -d melotts
+```
+
+- 后端读取 `.env` 的 `TTS_ENABLED` 和 `TTS_SERVICE_URL`。当本地容器不可用时，代码会按顺序回退到 `Edge TTS -> gTTS`。
+
 ### 截图上传 GitHub 流程
 
 将截图放到 `images/` 后执行：
@@ -76,13 +92,11 @@ git commit -m "docs: add screenshots and update trilingual README"
 git push origin master
 ```
 
-在 README 中引用图片示例（把文件名改成你的实际文件名）：
+截图预览：
 
-```md
 ![数据库运行截图 1](images/img1.png)
 ![数据库运行截图 2](images/img2.png)
 ![数据库运行截图 3](images/img3.png)
-```
 
 ---
 
@@ -135,6 +149,21 @@ Default admin is `admin / changeme` (seeded only when `users` table is empty).
 - In DB clients, inspect `speaking_drill.public`.
 - Backend checks tables on startup and creates missing ones.
 
+### Switching Local TTS Provider/Model
+
+- The default local TTS is the `melotts` Docker service (`timhagel/melotts-api-server`).
+- You can tune provider-side model behavior in `docker-compose.yml` via:
+  - `DEFAULT_LANGUAGE` (for example `EN` / `JP`)
+  - `DEFAULT_SPEAKER_ID` (speaker profile for that language)
+  - `DEFAULT_SPEED`
+- Start local TTS:
+
+```bash
+docker compose up -d melotts
+```
+
+- Backend uses `.env` values `TTS_ENABLED` and `TTS_SERVICE_URL`. If local MeloTTS is unavailable, fallback order is `Edge TTS -> gTTS`.
+
 ### Screenshot Upload to GitHub
 
 After putting screenshots in `images/`:
@@ -145,13 +174,11 @@ git commit -m "docs: add screenshots and update trilingual README"
 git push origin master
 ```
 
-README image example:
+Screenshot preview:
 
-```md
 ![Database running screenshot 1](images/img1.png)
 ![Database running screenshot 2](images/img2.png)
 ![Database running screenshot 3](images/img3.png)
-```
 
 ---
 
@@ -204,6 +231,21 @@ npm run dev
 - DB クライアントでは `speaking_drill.public` を確認してください。
 - バックエンド起動時に不足テーブルを自動作成します。
 
+### ローカル TTS の切り替え
+
+- 既定のローカル TTS は `melotts` コンテナ（`timhagel/melotts-api-server`）です。
+- `docker-compose.yml` で以下を切り替えできます：
+  - `DEFAULT_LANGUAGE`（例: `EN` / `JP`）
+  - `DEFAULT_SPEAKER_ID`（言語ごとの話者）
+  - `DEFAULT_SPEED`
+- 起動コマンド：
+
+```bash
+docker compose up -d melotts
+```
+
+- バックエンドは `.env` の `TTS_ENABLED` と `TTS_SERVICE_URL` を参照します。MeloTTS が使えない場合は `Edge TTS -> gTTS` の順でフォールバックします。
+
 ### スクリーンショットを GitHub へ反映
 
 `images/` に画像を置いた後：
@@ -214,10 +256,8 @@ git commit -m "docs: add screenshots and update trilingual README"
 git push origin master
 ```
 
-README での画像参照例：
+スクリーンショット表示：
 
-```md
 ![データベース起動スクリーンショット 1](images/img1.png)
 ![データベース起動スクリーンショット 2](images/img2.png)
 ![データベース起動スクリーンショット 3](images/img3.png)
-```
