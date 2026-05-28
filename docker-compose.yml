@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: speaking_drill_db
+    environment:
+      POSTGRES_USER: drill
+      POSTGRES_PASSWORD: drill
+      POSTGRES_DB: speaking_drill
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  # Local speech-to-text API (faster-whisper inside container).
+  # Docs: https://github.com/ahmetoner/whisper-asr-webservice
+  whisper-asr:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: speaking_drill_asr
+    environment:
+      ASR_ENGINE: faster_whisper
+      ASR_MODEL: small
+    ports:
+      - "9000:9000"
+    # Uncomment for NVIDIA GPU:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # Local text-to-speech (MeloTTS). API: POST /convert/tts -> WAV
+  # https://github.com/timhagel/MeloTTS-Docker-API-Server
+  melotts:
+    image: timhagel/melotts-api-server:latest
+    container_name: speaking_drill_tts
+    ports:
+      - "8888:8080"
+    environment:
+      DEFAULT_SPEED: "1"
+      DEFAULT_LANGUAGE: EN
+      DEFAULT_SPEAKER_ID: EN-Default
+    restart: unless-stopped
+    # Uncomment for NVIDIA GPU:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
